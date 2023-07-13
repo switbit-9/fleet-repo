@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools ~=  58.0.4", "cython ~= 0.29.0"]
+
+[tool.poetry]
+name = "fleet"
+version = "0.1.0"
+description = "Your project description"
+authors = ["test@example.com"]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "==4.2.2"
+django-filter = "==23.2"
+djangorestframework = "==3.14.0"
+python-dotenv = "==1.0.0"
+psycopg2-binary = "==2.9.6"
+typing-extensions = "==4.6.3"
+drf-yasg = "==1.21.6"
