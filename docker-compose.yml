@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+    djangoapp:
+      build: .
+      container_name: djangoapp
+      command: python manage.py runserver 0.0.0.0:8000
+      volumes:
+        - .:/usr/src/app
+      ports:
+        - "8000:8000"
+      depends_on:
+        - db
+
+    db:
+      image: postgres
+      container_name: postgresdb
+      restart: always
+      volumes:
+        - ./data/db:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
