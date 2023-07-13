@@ -14,10 +14,21 @@ After you cloned the repository, you want to create a virtual environment, so yo
 Install the dependencies needed to run the app:
     
     $ pip install -r requirements.txt
+Create a .env file to put the database credentials, SECRET_KEY and DEBUG
+
+```
+    SECRET_KEY = ''
+    DEBUG = 'TRUE'
+```
+
 Make those migrations work
     
     $ python manage.py makemigrations
     $ python manage.py migrate
+Import data into your database
+
+    $ python manage.py loaddata fixtures/data.json 
+
 Run It
 Fire up the server using this one simple command:
 
@@ -48,12 +59,12 @@ docker-compose up -d --build
 
 ## Documentation 
 
-Can check the API in your local environment using  [url](http://127.0.0.1:8000/api/docs/) or [url]http://127.0.0.1:8000/api/redoc/) or we use [Postman](https://www.postman.com/)
+Can check the API in your local environment using  http://127.0.0.1:8000/api/docs/ or http://127.0.0.1:8000/api/redoc/ or we use [Postman](https://www.postman.com/)
 
 
 ## URLs
 ```
-http://127.0.0.1:8000/api/aircraft/{serial_number}/ -> Get or Update aircraft
+(http://127.0.0.1:8000/api/aircraft/{serial_number}/) -> Get or Update aircraft
 http://127.0.0.1:8000/api/aircraft/ -> List or Create an aircraft
 http://127.0.0.1:8000/api/flights/{id} -> Get or Retrieve or Delete flight
 http://127.0.0.1:8000/api/flights/ -> List or Create Flight

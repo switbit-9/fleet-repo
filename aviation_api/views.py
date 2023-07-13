@@ -1,7 +1,7 @@
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
@@ -9,17 +9,24 @@ from drf_yasg import openapi
 from django.utils.decorators import method_decorator
 from .models import (
     Aircraft,
-    Flights
+    Flights,
+    Airports
 )
 from .serializers import (
     RetrieveAircraftSerializer,
     UpdateAircraftSerializer,
     CreateFlightsSerializer,
     RetrieveFlightsSerializer,
-    ReportSerializer
+    ReportSerializer,
+    RetrieveAirportSerializer,
 
 )
 from .filters import FlightsFilter
+
+class ListAirportsView(ListAPIView):
+    queryset = Airports.objects.all()
+    serializer_class = RetrieveAirportSerializer
+    pagination_class = PageNumberPagination
 
 @method_decorator(name='update', decorator=swagger_auto_schema(
     operation_description="Only manufacturer field can be updated",
@@ -74,8 +81,19 @@ class RetrieveUpdateDeleteFlightView(RetrieveUpdateDestroyAPIView):
         serializer = RetrieveFlightsSerializer(instance)
         return Response(serializer.data)
 
+class CreateFlightView(CreateAPIView):
+    queryset = Flights.objects.all()
+    serializer_class = CreateFlightsSerializer
 
-class ListCreateFlightView(ListCreateAPIView):
+    def create(self, request, *args, **kwargs):
+        serializer = CreateFlightsSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ListCreateFlightView(ListAPIView):
     serializer_class = RetrieveFlightsSerializer
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
@@ -85,13 +103,6 @@ class ListCreateFlightView(ListCreateAPIView):
         queryset = Flights.objects.order_by('departure_date')
         return queryset
 
-    def create(self, request, *args, **kwargs):
-        serializer = CreateFlightsSerializer(data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 manual_params= [
     openapi.Parameter('date_from', openapi.IN_QUERY, description="From Date format :  2023-08-22T16:00:00", type=openapi.TYPE_STRING),

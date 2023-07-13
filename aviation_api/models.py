@@ -32,7 +32,7 @@ class Airports(models.Model):
 
     code = models.CharField(max_length=4, primary_key=True, validators=[
         RegexValidator(
-            regex=r'^[A-Z]{1}[A-Z0-9]{1,3}$',
+            regex=r'^[A-Za-z0-9]{4}$',
             message="Field should be a 4 uppercase and number characters"
         )
     ])
